@@ -1,0 +1,185 @@
+%h4=link_to "Home", root_path
+%hr
+%h1 Public API v3
+
+%h3.text-primary= "info"
+%h5.text-warning= 'Provides all the information about currently active pairs'
+- if @info.present?
+  %h4= "Server Time: #{date_from_timestamp @info['server_time']}"
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Pair'
+          %th= 'Decimal Places'
+          %th= 'Max. Price'
+          %th= 'Min. Price'
+          %th= 'Min. Amount'
+          %th= 'Hidden'
+          %th= 'Fee'
+      %tbody
+        - @info['pairs'].each do |pair|
+          %tr
+            %td= pair.first
+            %td= pair.last['decimal_places']
+            %td= pair.last['max_price']
+            %td= pair.last['min_price']
+            %td= pair.last['min_amount']
+            %td= pair.last['hidden']
+            %td= pair.last['fee']
+- else
+  %h4.text-danger= 'No data (check logs for errors)'
+
+%h3.text-primary= 'ticker'
+%h5.text-warning= 'Provides all the information about selected pairs'
+- if @ticker.present?
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Pair'
+          %th= 'Max. Price'
+          %th= 'Min. Price'
+          %th= 'Avg. Price'
+          %th= 'Volume'
+          %th= 'Vol. Currency'
+          %th= 'Last'
+          %th= 'Buy'
+          %th= 'Sell'
+          %th= 'Updated'
+      %tbody
+        - @ticker.each do |pair|
+          %tr
+            %td= pair.first
+            %td= pair.last['high']
+            %td= pair.last['low']
+            %td= pair.last['avg']
+            %td= pair.last['vol']
+            %td= pair.last['vol_cur']
+            %td= pair.last['last']
+            %td= pair.last['buy']
+            %td= pair.last['sell']
+            %td= date_from_timestamp pair.last['updated']
+- else
+  %h4.text-danger= 'No data (check logs for errors)'
+
+%h3.text-primary= "depth"
+%h5.text-warning= 'Provides the information about active orders on the pair'
+- if @depth.present?
+  .container-fluid
+    - @depth.each do |pair|
+      %h4= "Pair: #{pair.first}"
+      .row
+        .col-md-6
+          %h5= 'Sell Orders (asks)'
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= "Price (#{pair.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - pair.last['asks'].each_with_index do |ask, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= ask.first
+                  %td= ask.last
+
+        .col-md-6
+          %h5= 'Buy Orders (bids)'
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= "Price (#{pair.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - pair.last['bids'].each_with_index do |bid, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= bid.first
+                  %td= bid.last
+- else
+  %h4.text-danger= 'No data (check logs for errors)'
+
+%h3.text-primary= "trades"
+%h5.text-warning= 'Provides the information about the last trades (Trades History)'
+- if @trades.present?
+  .container-fluid
+    .row
+      .col
+        - @trades.each do |trade|
+          %h5= "Pair: #{trade.first}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= 'ID'
+                %th= 'Date'
+                %th= 'Type'
+                %th= "Price (#{trade.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - trade.last.each_with_index do |item, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= item['tid']
+                  %td= date_from_timestamp item['timestamp']
+                  - if item['type'] == 'ask'
+                    %td.ask= 'Sell'
+                  - else
+                    %td.bid= 'Buy'
+                  %td= item['price']
+                  %td= item['amount']
+
+  %h3= "trades - alternative presentation: asks and bids are separated"
+  - ask_trades, bid_trades = split_trades_by_type(@trades)
+
+  .container-fluid
+    .row
+      .col-md-6
+        %h4= 'Sell Trades (asks)'
+        
+        - ask_trades.each do |ask_trade|
+          %h5= "Pair: #{ask_trade.first}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= 'ID'
+                %th= 'Date'
+                %th= "Price (#{ask_trade.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - ask_trade.last.each_with_index do |trade, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= trade['tid']
+                  %td= date_from_timestamp trade['timestamp']
+                  %td= trade['price']
+                  %td= trade['amount']
+      .col-md-6
+        %h4= 'Buy Trades (bids)'
+        - bid_trades.each do |bid_trade|
+          %h5= "Pair: #{bid_trade.first}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= 'ID'
+                %th= 'Date'
+                %th= "Price (#{bid_trade.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - bid_trade.last.each_with_index do |trade, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= trade['tid']
+                  %td= date_from_timestamp trade['timestamp']
+                  %td= trade['price']
+                  %td= trade['amount']
+          
+- else
+  %h4.text-danger= 'No data (check logs for errors)'
+
+

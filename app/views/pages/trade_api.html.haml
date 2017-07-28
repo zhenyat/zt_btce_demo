@@ -1,0 +1,113 @@
+%h4=link_to "Home", root_path
+
+%h1 Trade API v1
+
+%h3.text-primary= "Account Info ('getInfo' method)"
+%h5.text-warning= 'Returns information about the user’s current balance, API-key privileges, the number of open orders and Server Time.'
+- if @account_info.present?
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th{:colspan => "4"}= "Funds"
+          %th{:colspan => "3"}= "Rights"
+        %tr
+          %th= "USD"
+          %th= "BTC"
+          %th= "EUR"
+          %th= "RUR"
+
+          %th= "info"
+          %th= "trade"
+          %th= "trade"
+      %tbody
+        %tr
+          %td=  @account_info['return']['funds']['usd']
+          %td=  @account_info['return']['funds']['btc']
+          %td=  @account_info['return']['funds']['eur']
+          %td=  @account_info['return']['funds']['rur']
+
+          %td=  @account_info['return']['rights']['info']
+          %td=  @account_info['return']['rights']['trade']
+          %td=  @account_info['return']['rights']['trade']
+
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= "Transaction Count"
+          %th= "Open Orders"
+          %th= "Server Time"
+      %tbody
+        %tr
+          %td=  @account_info['return']['transaction_count']
+          %td=  @account_info['return']['open_orders']
+          %td=  date_from_timestamp @account_info['return']['server_time']
+- else
+  %h4.text-danger= 'No data (check logs for errors)'
+
+%h3.text-primary= "Active Orders ('ActiveOrder' method)"
+%h5.text-warning= 'Returns the list of your active orders'
+- if @active_orders.present?
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Order ID'
+          %th= 'Created'
+          %th= 'Type'
+          %th= 'Pair'
+          %th= 'Price'
+          %th= 'Amount'
+          %th= 'Status'
+      %tbody
+        - @active_orders['return'].each do |order|
+          %tr
+            %td= order.first
+            %td= date_from_timestamp order.last['timestamp_created']
+            - if order.last['type'] == 'sell'
+              %td.ask= 'Sell'
+            - else
+              %td.bid= 'Buy'
+            %td= order.last['pair']
+            %td= order.last['rate']
+            %td= order.last['amount']
+            %td= order.last['status']
+
+- else
+  %h4.text-danger= 'No data found'
+
+%h3.text-primary= "Order Information ('OrderInfo' method)"
+%h5.text-warning= 'Returns the information on particular order'
+- if @order_info.present?
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Order ID'
+          %th= 'Created'
+          %th= 'Type'
+          %th= 'Pair'
+          %th= 'Price'
+          %th= 'Starting Amount'
+          %th= 'Remaining Amount'
+          %th= 'Status'
+      %tbody
+        - order = @order_info['return'].first.last
+        %tr
+          %td= @order_info['return'].first.first
+          - order = @order_info['return'].first.last
+          %td= date_from_timestamp order['timestamp_created']
+          - if order['type'] == 'sell'
+            %td.ask= 'Sell'
+          - else
+            %td.bid= 'Buy'
+          %td= order['pair']
+          %td= order['rate']
+          %td= order['start_amount']
+          %td= order['amount']
+          %td= order_status order['status']
+
+
+
+- else
+  %h4.text-danger= 'No data found'

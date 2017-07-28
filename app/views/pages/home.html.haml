@@ -1,0 +1,14 @@
+%h1 BTC-e Demo
+%hr
+%h4= "Domain: #{@domain}" if @domain.present?
+%h4= "KEY: #{@key}" if @key.present?
+%h4= "SECRET: #{@secret}" if @secret.present?
+%hr
+.container-fluid
+  .row
+    .col-md-3
+      %h4=link_to "Public API", pages_public_api_path
+    
+    .col-md-3
+      %h4= link_to "Trade API", pages_trade_api_path
+
