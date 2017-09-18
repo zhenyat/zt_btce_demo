@@ -33,9 +33,10 @@
 #   12.07.2017  git_source
 #   19.07.2017  RoR 5.0.4
 #   31.08.2017  RoR 5.1.3
+#   18.09.2017  Ruby 2.4.2
 ################################################################################
 source 'https://rubygems.org'
-ruby '2.4.1'
+ruby '2.4.2'
 
 git_source(:github) do |repo_name|
   repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")

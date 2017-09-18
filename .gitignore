@@ -21,3 +21,4 @@
 .byebug_history
 
 /config/btce_api.yml
+/nbproject/private/
