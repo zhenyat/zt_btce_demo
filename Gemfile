@@ -32,6 +32,7 @@
 #   28.06.2017  gem 'lightbox2-rails'
 #   12.07.2017  git_source
 #   19.07.2017  RoR 5.0.4
+#   31.08.2017  RoR 5.1.3
 ################################################################################
 source 'https://rubygems.org'
 ruby '2.4.1'
@@ -41,7 +42,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.2'                         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.1.4'                         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 
 gem 'zt_btce', :github => '/Users/zhenya/ZT_Lab/Ruby/Gems/zt_btce', :branch => 'master'
 
