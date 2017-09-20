@@ -17,9 +17,8 @@ class PagesController < ApplicationController
   # Public API methods demonstration 
   def public_api
    pairs = %w(btc_usd btc_eur btc_rur).join('-')
-#   pairs = nil
     @info   = ZtBtce.info
-    @ticker = ZtBtce.ticker pairs: pairs
+    @ticker = ZtBtce.ticker #pairs: "pairs
     @depth  = ZtBtce.depth  pairs: pairs, limit: 20
     @trades = ZtBtce.trades pairs: pairs, limit: 10
   end
@@ -30,8 +29,8 @@ class PagesController < ApplicationController
     else
       puts "ZT! #{session['HTTP_REFERER']}"
     end
-#    @account_info  = ZtBtce.account_info
+    @account_info  = ZtBtce.account_info
     @active_orders = ZtBtce.active_orders 'mode' => 'emulator'
-#    @order_info    = ZtBtce.order_info 343152, 'mode' => 'emulator'
+    @order_info    = ZtBtce.order_info 343152, 'mode' => 'emulator'
   end
 end

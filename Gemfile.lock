@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com//Users/zhenya/ZT_Lab/Ruby/Gems/zt_btce.git
-  revision: 7adf75191c99c73b5a5dcd8ebccf5a01261c0146
+  revision: 095173492a08b8e995f42f5eebecf1c048565d98
   branch: master
   specs:
-    zt_btce (0.4.2)
+    zt_btce (0.5.3)
       hashie (~> 3.5)
       httparty (~> 0.15.6)
       json (~> 2.1)
