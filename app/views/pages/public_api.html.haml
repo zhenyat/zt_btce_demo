@@ -138,7 +138,7 @@
   .container-fluid
     .row
       .col-md-6
-        %h4= 'Sell Trades (asks)'
+        %h4.ask= 'Sell Trades (asks)'
         
         - ask_trades.each do |ask_trade|
           %h5= "Pair: #{ask_trade.first}"
@@ -159,7 +159,7 @@
                   %td= trade['price']
                   %td= trade['amount']
       .col-md-6
-        %h4= 'Buy Trades (bids)'
+        %h4.bid= 'Buy Trades (bids)'
         - bid_trades.each do |bid_trade|
           %h5= "Pair: #{bid_trade.first}"
           %table.table.table-striped.table-hover

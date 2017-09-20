@@ -1,5 +1,5 @@
 class PagesController < ApplicationController
-  
+
   def home
     t = ZtBtce::CliTest.new
     t.say_hello
