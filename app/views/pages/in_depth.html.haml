@@ -1,0 +1,46 @@
+%h3.text-info= "Active Orders for each Pair"
+- if @asks.present? || @bids.present?
+  .container-fluid
+    .row
+      .col-md-6
+        - @asks.each_pair do |key, value|
+          %h4.text-primary= "Pair: #{key}"
+          %h5.ask= "Sell Orders: Total = #{value[:orders].count} / Amount Total = #{value[:total].round(2)} #{key.split('_').first.upcase}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= "Price (#{key.split('_').last.upcase})"
+                %th= "Amount (#{key.split('_').first.upcase})"
+                %th= "Amomnt (#{key.split('_').last.upcase})"
+            %tbody
+              - value[:orders].each_with_index do |order, index|
+                - break if index > 39
+                %tr
+                  %td= "#{index+1}"
+                  %td= order.first
+                  %td= order.last
+                  %td= (order.first * order.last).round(8)
+
+      .col-md-6
+        - @bids.each_pair do |key, value|
+          %h4.text-primary= "Pair: #{key}"
+          %h5.bid= "Buy Orders: Total = #{value[:orders].count} / Amount Total = #{value[:total].round(2)}  #{key.split('_').last.upcase}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= "Price (#{key.split('_').last.upcase})"
+                %th= "Amount (#{key.split('_').first.upcase})"
+                %th= "Amomnt (#{key.split('_').last.upcase})"
+            %tbody
+              - value[:orders].each_with_index do |order, index|
+                - break if index > 39
+                %tr
+                  %td= "#{index+1}"
+                  %td= order.first
+                  %td= order.last
+                  %td= (order.first * order.last).round(8)
+
+- else
+  %h4.text-danger= 'No Sell / Buy  Orders (check logs for errors)'

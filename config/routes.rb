@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root 'pages#home'
 
   get 'pages/charts'
+  get 'pages/in_depth'
   get 'pages/public_api'
   get 'pages/trade_api'
 
