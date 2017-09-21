@@ -71,6 +71,7 @@ GEM
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)
+    chartkick (2.2.4)
     ckeditor (4.2.4)
       cocaine
       orm_adapter (~> 0.5.0)
@@ -289,6 +290,7 @@ DEPENDENCIES
   bootstrap-will_paginate
   byebug
   carrierwave
+  chartkick
   ckeditor
   coffee-rails (~> 4.2)
   enum_help

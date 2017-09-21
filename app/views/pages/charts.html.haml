@@ -1,0 +1,14 @@
+%h4=link_to "Home", root_path
+/%h4= @counts
+
+= pie_chart @counts
+/= column_chart @counts
+
+/= @records.group_by{|item| item['type']}
+
+%h3= 'Ask Amount'
+= line_chart @a_amnt
+
+%h3= 'Bid Amount'
+= line_chart @b_amnt
+

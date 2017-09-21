@@ -34,6 +34,7 @@
 #   19.07.2017  RoR 5.0.4
 #   31.08.2017  RoR 5.1.3
 #   18.09.2017  Ruby 2.4.2
+#   20.09.2017  Chartkick
 ################################################################################
 source 'https://rubygems.org'
 ruby '2.4.2'
@@ -98,6 +99,8 @@ gem 'bootstrap-sass'
 gem 'lightbox2-rails'                           # https://github.com/gavinkflam/lightbox2-rails
 gem 'simple_form'                               # https://github.com/plataformatec/simple_form
 gem 'enum_help'
+
+gem 'chartkick'
 
 group :development, :test do
   gem 'byebug'                      # Byebug is a Ruby 2 debugger. Call 'byebug' anywhere in the code to stop execution and get a debugger console

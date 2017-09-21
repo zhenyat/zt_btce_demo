@@ -78,12 +78,14 @@
                 %th= '##'
                 %th= "Price (#{pair.first.split('_').last.upcase})"
                 %th= 'Amount (BTC)'
+                %th= "Amomnt (#{pair.first.split('_').last.upcase})"
             %tbody
               - pair.last['asks'].each_with_index do |ask, index|
                 %tr
                   %td= "#{index+1}"
                   %td= ask.first
                   %td= ask.last
+                  %td= (ask.first * ask.last).round(8)
 
         .col-md-6
           %h5= 'Buy Orders (bids)'
@@ -93,12 +95,14 @@
                 %th= '##'
                 %th= "Price (#{pair.first.split('_').last.upcase})"
                 %th= 'Amount (BTC)'
+                %th= "Amomnt (#{pair.first.split('_').last.upcase})"
             %tbody
               - pair.last['bids'].each_with_index do |bid, index|
                 %tr
                   %td= "#{index+1}"
                   %td= bid.first
                   %td= bid.last
+                  %td= (bid.first * bid.last).round(8)
 - else
   %h4.text-danger= 'No data (check logs for errors)'
 

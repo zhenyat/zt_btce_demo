@@ -16,6 +16,8 @@
 //= require bootstrap
 //= require lightbox
 //= require ckeditor/init
+// require highcharts
+//= require chartkick
 // require rainbow
 // require ruby
 //= require_tree .
