@@ -22,19 +22,18 @@ class PagesController < ApplicationController
       @counts = { asks: asks.count, bids: bids.count}
     end
 
+  # Detailed *depth* handling
+  def depth_data
+    pairs = %w(btc_usd eth_usd ltc_usd).join('-')
+#    pairs = 'btc_usd'
+    limit = 5000
     
-  def home
-#    t = ZtBtce::CliTest.new
-#    t.say_hello
+    depth = ZtBtce.depth pairs: pairs, limit: limit
     
-    @domain = ZtBtce::DOMAIN
-    @key    = ZtBtce::KEY
-    
-    asterisks =''
-    for i in (0..59)
-      asterisks[i]= '*'
-    end
-    @secret = "#{asterisks}#{ZtBtce::SECRET[-4..-1]}"
+    @asks, @bids = depth_split depth
+
+    @asks_stat = depth_stat @asks
+    @bids_stat = depth_stat @bids
   end
     
   # Splits all orders by type (ask / bid and puts them in Hash by pair)
@@ -67,25 +66,64 @@ class PagesController < ApplicationController
 
     return asks, bids
   end
+  
+  ##############################################################################
+  # Calculates statistical values
+  #     Min / Max / Average of Orders Prices
+  #
+  #     stat = { pair_name: {price_min, price_max, price_avg, total_orders, total_amounts[]} }
+  ##############################################################################
+  def depth_stat orders
+    stat = {}
+    
+    orders.each do |pair|
+      prices       = []
+      pair_amounts = [0, 0]
 
-  # Detailed *depth* handling
-  def in_depth
-    pairs = %w(btc_usd eth_usd ltc_usd).join('-')
-#    pairs = 'btc_usd'
-    limit = 5000
-    
-    depth = ZtBtce.depth pairs: pairs, limit: limit
-    
-    @asks, @bids = depth_split depth
+      pair_name  = pair.first  
+      pair.last[:orders].each do |order|
+        prices << order[0]
+        pair_amounts[0] += order[1]              # btc
+        pair_amounts[1] += order[0] * order[1]   # usd
+      end
+
+      stat.update("#{pair_name}" => {
+          price_min:    prices.min,
+          price_max:    prices.max,
+          price_sum:    prices.sum,
+          orders:       prices.size,
+          pair_amounts: pair_amounts
+      })
+    end
+    stat
   end
 
+  def home
+#    t = ZtBtce::CliTest.new
+#    t.say_hello
+    
+    @domain = ZtBtce::DOMAIN
+    @key    = ZtBtce::KEY
+    
+    asterisks =''
+    for i in (0..59)
+      asterisks[i]= '*'
+    end
+    @secret = "#{asterisks}#{ZtBtce::SECRET[-4..-1]}"
+  end
+
+  def pairs
+    @pairs = Pair.all
+  end
+  
   # Public API methods demonstration 
   def public_api
     pairs = %w(btc_usd eth_usd ltc_usd).join('-')
     @info   = ZtBtce.info
     @ticker = ZtBtce.ticker pairs: pairs
     @depth  = ZtBtce.depth  pairs: pairs, limit: 20
-    @trades = ZtBtce.trades pairs: pairs, limit: 20
+    @trades = ZtBtce.trades pairs: pairs, limit: 30
+    puts @trades
   end
 
   def trade_api
@@ -97,5 +135,45 @@ class PagesController < ApplicationController
     @account_info  = ZtBtce.account_info
     @active_orders = ZtBtce.active_orders 'mode' => 'emulator'
     @order_info    = ZtBtce.order_info 343152, 'mode' => 'emulator'
+  end
+  
+  def trades_data
+    pairs = %w(btc_usd eth_usd ltc_usd).join('-')
+#    pairs = 'btc_usd'
+    limit = 5000
+    
+    @trades = ZtBtce.trades pairs: pairs, limit: limit
+
+    
+#    @asks, @bids = trades_split @trades
+    
+  end
+  
+  # Splits trades by a sell / buy type
+  def trades_split trades
+    asks = {}
+    bids = {}
+
+    trades.each do |pair_trades|
+      ask_orders = []
+      bid_orders = []
+      
+      pair_name = pair_trades.first
+      pair_trades.last.each do |trade|
+        if trade['type'] == 'ask'   # Separate asks from bids
+          ask_orders << trade
+        else
+          bid_orders << trade
+        end
+      end  
+      asks.update({"#{pair_name}" => ask_orders})
+      bids.update({"#{pair_name}" => bid_orders})
+    end
+    
+    return asks, bids
+  end
+  
+  def trades_store trades
+  
   end
 end

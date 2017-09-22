@@ -5,7 +5,8 @@
       .col-md-6
         - @asks.each_pair do |key, value|
           %h4.text-primary= "Pair: #{key}"
-          %h5.ask= "Sell Orders: Total = #{value[:orders].count} / Amount Total = #{value[:total].round(2)} #{key.split('_').first.upcase}"
+          %h5.ask= "Sell Orders: Total = #{value[:orders].count} | Amount Total = #{value[:total].round(2)} #{key.split('_').first.upcase}"
+          %h5.text-warning= "Price Min: #{@asks_stat[key][:price_min].round(2)},  Max: #{@asks_stat[key][:price_max].round(2)}, Average: #{(@asks_stat[key][:price_sum] / @asks_stat[key][:orders]).round(2)}, Total: #{@asks_stat[key][:pair_amounts][0].round(2)}"
           %table.table.table-striped.table-hover
             %thead
               %tr
@@ -21,11 +22,11 @@
                   %td= order.first
                   %td= order.last
                   %td= (order.first * order.last).round(8)
-
       .col-md-6
         - @bids.each_pair do |key, value|
           %h4.text-primary= "Pair: #{key}"
-          %h5.bid= "Buy Orders: Total = #{value[:orders].count} / Amount Total = #{value[:total].round(2)}  #{key.split('_').last.upcase}"
+          %h5.bid= "Buy Orders: Total = #{value[:orders].count} | Amount Total = #{value[:total].round(2)}  #{key.split('_').last.upcase}"
+          %h5.text-warning= "Price Min: #{@bids_stat[key][:price_min].round(2)}, Max: #{@bids_stat[key][:price_max].round(2)}, Average: #{(@bids_stat[key][:price_sum] / @bids_stat[key][:orders]).round(2)} Total: #{@bids_stat[key][:pair_amounts][1].round(2)}"
           %table.table.table-striped.table-hover
             %thead
               %tr
@@ -41,6 +42,10 @@
                   %td= order.first
                   %td= order.last
                   %td= (order.first * order.last).round(8)
-
+ 
 - else
   %h4.text-danger= 'No Sell / Buy  Orders (check logs for errors)'
+
+
+
+/=line_chart @asks.first.last[:orders]

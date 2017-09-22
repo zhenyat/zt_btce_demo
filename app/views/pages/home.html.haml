@@ -6,14 +6,23 @@
 %hr
 .container-fluid
   .row
-    .col-md-3
+    .col-md-2
       %h4=link_to "Public API", pages_public_api_path
     
-    .col-md-3
+    .col-md-2
       %h4= link_to "Trade API", pages_trade_api_path
 
-    .col-md-3
+    .col-md-2
+      %h4= link_to "Pairs", pages_pairs_path
+
+    .col-md-2
+      %h4= link_to "Trades History", trades_index_path
+
+    .col-md-2
       %h4= link_to "Charts", pages_charts_path
 
-    .col-md-3
-      %h4= link_to "In Depth", pages_in_depth_path
+    .col-md-2
+      %h4= link_to "Trades Data", pages_trades_data_path
+
+    .col-md-2
+      %h4= link_to "Depth Data", pages_depth_data_path

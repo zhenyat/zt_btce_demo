@@ -1,0 +1,50 @@
+%h1 Trade History
+- if @trades.present?
+  - ask_trades, bid_trades = split_trades_by_type(@trades)
+
+  .container-fluid
+    .row
+      .col-md-6
+        %h4.ask= 'Sell Trades (asks)'
+        
+        - ask_trades.each do |ask_trade|
+          %h5= "Pair: #{ask_trade.first}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= 'ID'
+                %th= 'Date'
+                %th= "Price (#{ask_trade.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - ask_trade.last.each_with_index do |trade, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= trade['tid']
+                  %td= date_from_timestamp trade['timestamp']
+                  %td= trade['price']
+                  %td= trade['amount']
+      .col-md-6
+        %h4.bid= 'Buy Trades (bids)'
+        - bid_trades.each do |bid_trade|
+          %h5= "Pair: #{bid_trade.first}"
+          %table.table.table-striped.table-hover
+            %thead
+              %tr
+                %th= '##'
+                %th= 'ID'
+                %th= 'Date'
+                %th= "Price (#{bid_trade.first.split('_').last.upcase})"
+                %th= 'Amount (BTC)'
+            %tbody
+              - bid_trade.last.each_with_index do |trade, index|
+                %tr
+                  %td= "#{index+1}"
+                  %td= trade['tid']
+                  %td= date_from_timestamp trade['timestamp']
+                  %td= trade['price']
+                  %td= trade['amount']
+
+- else
+  %h4.text-danger= 'No data (check logs for errors)'

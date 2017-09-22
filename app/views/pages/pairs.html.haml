@@ -1,0 +1,27 @@
+%h4=link_to "Home", root_path
+%hr
+
+%h3.text-primary= "Pairs"
+- if @pairs.present?
+  .container-fluid
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Pair'
+          %th= 'Decimal Places'
+          %th= 'Max. Price'
+          %th= 'Min. Price'
+          %th= 'Min. Amount'
+          %th= 'Hidden'
+          %th= 'Fee'
+      %tbody
+        - @pairs.each do |pair|
+          %tr
+            %td= pair.name
+            %td= pair.decimal_places
+            %td= pair.max_price
+            %td= pair.min_price
+            %td= pair.min_amount
+            %td= pair.hidden
+            %td= pair.fee
+

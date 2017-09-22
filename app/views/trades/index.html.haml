@@ -1,0 +1,29 @@
+%h4=link_to "Home", root_path
+%hr
+%h1 Trades History
+- if @trades.present?
+  .container-fluid
+    - @trades.pluck(:pair_id).uniq.each do |pair_id|
+      %h4= "Pair: #{Pair.find(pair_id).name} (total records: #{@trades.where('pair_id = ?', pair_id).count})"
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th= 'TID'
+            %th= 'Date'
+            %th= 'Type'
+            %th= "Price (#{Pair.find(pair_id).name.split('_').last.upcase})"
+            %th= "Amount (#{Pair.find(pair_id).name.split('_').first.upcase})"
+            %th= "Total (#{Pair.find(pair_id).name.split('_').last.upcase})"
+        %tbody
+          - @trades.where('pair_id = ?', pair_id).each_with_index do |trade, index|
+            - break if index > 39
+            %tr
+              %td= trade.tid
+              %td= date_from_timestamp trade.timestamp
+              - if trade.kind == 0
+                %td.ask= 'Sell'
+              - else
+                %td.bid= 'Buy'
+              %td= trade.price
+              %td= trade.amount
+              %td= (trade.price * trade.amount).round(8)
