@@ -101,6 +101,8 @@ gem 'simple_form'                               # https://github.com/plataformat
 gem 'enum_help'
 
 gem 'chartkick'
+gem 'groupdate'
+gem 'active_median'
 
 group :development, :test do
   gem 'byebug'                      # Byebug is a Ruby 2 debugger. Call 'byebug' anywhere in the code to stop execution and get a debugger console

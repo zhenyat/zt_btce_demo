@@ -1,0 +1,9 @@
+/https://www.chartkick.com
+%h4=link_to "Home", root_path
+%hr
+%p= "#{@asks.count}"
+%hr
+
+= line_chart @asks, min: 3850, max: 4250, colors: ["red", "blue"], legend: true
+
+= line_chart @asks.map { |ask| {ask: ask[0]} }

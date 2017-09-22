@@ -34,6 +34,8 @@ GEM
       erubi (~> 1.4)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.3)
+    active_median (0.1.4)
+      activerecord
     activejob (5.1.4)
       activesupport (= 5.1.4)
       globalid (>= 0.3.6)
@@ -99,6 +101,8 @@ GEM
     formatador (0.2.5)
     globalid (0.4.0)
       activesupport (>= 4.2.0)
+    groupdate (3.2.0)
+      activesupport (>= 3)
     guard (2.14.1)
       formatador (>= 0.2.4)
       listen (>= 2.7, < 4.0)
@@ -284,6 +288,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_median
   acts_as_list
   bcrypt (~> 3.1.7)
   bootstrap-sass
@@ -295,6 +300,7 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   enum_help
   faker
+  groupdate
   guard
   guard-minitest
   haml-rails

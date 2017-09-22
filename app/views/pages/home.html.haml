@@ -6,6 +6,7 @@
 %hr
 .container-fluid
   .row
+    %h3 Demo Pages
     .col-md-2
       %h4=link_to "Public API", pages_public_api_path
     
@@ -13,14 +14,20 @@
       %h4= link_to "Trade API", pages_trade_api_path
 
     .col-md-2
+      %h4= link_to "Charts", pages_charts_path
+
+  .row
+    %h3 Working Pages
+    .col-md-2
       %h4= link_to "Pairs", pages_pairs_path
 
     .col-md-2
       %h4= link_to "Trades History", trades_index_path
 
     .col-md-2
-      %h4= link_to "Charts", pages_charts_path
+      %h4= link_to "Trades Charts", trades_charts_path
 
+ 
     .col-md-2
       %h4= link_to "Trades Data", pages_trades_data_path
 
