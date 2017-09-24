@@ -17,6 +17,8 @@
 //= require lightbox
 //= require ckeditor/init
 // require highcharts
+//= require highstock
+// require highstock/highcharts-more
 //= require chartkick
 // require rainbow
 // require ruby

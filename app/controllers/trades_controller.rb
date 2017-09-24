@@ -1,5 +1,5 @@
 class TradesController < ApplicationController
-
+  
   # Adds news data from the stock to DB
   def add_trades
     add_count  = 0
@@ -31,7 +31,7 @@ class TradesController < ApplicationController
         end
       end
     end
-    puts "===== Trades added: #{add_count} | Trades skipped: #{skip_count}"
+    puts "===== Trades added: #{add_count} | Trades skipped: #{skip_count} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
   end
   
   def charts
@@ -39,10 +39,10 @@ class TradesController < ApplicationController
     
     asks = Trade.where('kind == ? and pair_id = ?', 0, 1).order(:timestamp)#.first(100)
     asks.each do |ask|
-#      Datum.create value: ask.price, closed_at: Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S')
-       tmp = [Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S'), ask.price]
-       tmp = [Time.at(ask.timestamp).strftime('%d-%m %H:%M'), ask.price]
-       @asks << tmp
+#    Datum.create value: ask.price, closed_at: Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S')
+     tmp = [Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S'), ask.price]
+     tmp = [Time.at(ask.timestamp).strftime('%d-%m %H:%M'), ask.price]
+     @asks << tmp
     end
 #    @asks = Datum.first(20)
     puts @asks.count.to_s
@@ -52,4 +52,36 @@ class TradesController < ApplicationController
     add_trades
     @trades = Trade.all.order(tid: :desc)  
   end
+  
+  def ohlc
+    puts time_round
+    
+    timeframe = []
+    timeframe[0] = DateTime.parse("2017-09-24 11:00:00").to_i
+    timeframe[1] = DateTime.parse("2017-09-24 11:30:00").to_i
+    
+    trades = Trade.where('pair_id = ? and timestamp >= ? and timestamp < ?', 1, timeframe[0], timeframe[1]).order(:timestamp)
+    
+    @open   = trades.first
+    @close  = trades.last
+    @high   = trades.max_by(&:price)
+    @low    = trades.min_by(&:price)
+    @amount = trades.sum(:amount)
+    
+#    @open  = trades.first.price
+#    @close = trades.first.last
+#    @high  = trades.maximum(:price)
+#    @low   = trades.minimum(:price)
+    
+  end
+  
+  def time_round(slot = 30.minute)
+    Time.at((Time.now.to_i / slot).round * slot)
+  end
+  
+  
+  def round(granularity=1.hour)
+    Time.at((self.to_time.to_i/granularity).round * granularity).to_datetime
+  end
+
 end

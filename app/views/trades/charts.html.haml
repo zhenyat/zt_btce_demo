@@ -4,6 +4,6 @@
 %p= "#{@asks.count}"
 %hr
 
-= line_chart @asks, min: 3850, max: 4250, colors: ["red", "blue"], legend: true
+= column_chart @asks, min: 3850, max: 4250, colors: ["red", "blue"], legend: true
 
-= line_chart @asks.map { |ask| {ask: ask[0]} }
+/= line_chart @asks.map { |ask| {ask: ask[0]} }

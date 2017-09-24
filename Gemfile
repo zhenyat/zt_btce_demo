@@ -101,6 +101,8 @@ gem 'simple_form'                               # https://github.com/plataformat
 gem 'enum_help'
 
 gem 'chartkick'
+#gem 'highcharts-rails'
+gem 'highstock-rails'                           # https://github.com/justinkuepper/highstock-rails
 gem 'groupdate'
 gem 'active_median'
 

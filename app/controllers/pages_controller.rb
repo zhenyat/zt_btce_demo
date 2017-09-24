@@ -1,26 +1,36 @@
 class PagesController < ApplicationController
 
-    def charts
-      pairs = 'btc_usd'
-      @trades = ZtBtce.trades pairs: pairs, limit: 5000
+  include TradesPro
+  
+  def charts
+    pair = 'btc_usd'
+    
+    @asks, @bids = trades_by_pair pair
 
-      asks = []
-      bids = []
-      key  = 1
-      @a_amnt = {}
-      @b_amnt = {}
-      @trades[pairs].each do |a|
-        if a['type'] == 'ask'
-          asks << a
-          @a_amnt[Time.at(a['timestamp'])] = a['amount']
-        else
-          bids << a
-          @b_amnt[Time.at(a['timestamp'])] = a['amount']
-        end
-        key += 1
-      end
-      @counts = { asks: asks.count, bids: bids.count}
+    puts @asks.count
+    puts @bids.count
+ 
+    @data = []
+    @asks.map do |value|
+      @data << [Time.at(value.timestamp).strftime('%d-%m %H:%M'), value.price]
+
     end
+      puts @data.last
+    
+#    @a_amnt = {}
+#    @b_amnt = {}
+#    @trades[pairs].each do |a|
+#      if a['type'] == 'ask'
+#        asks << a
+#        @a_amnt[Time.at(a['timestamp'])] = a['amount']
+#      else
+#        bids << a
+#        @b_amnt[Time.at(a['timestamp'])] = a['amount']
+#      end
+#      key += 1
+#    end
+#    @counts = { asks: asks.count, bids: bids.count}
+  end
 
   # Detailed *depth* handling
   def depth_data

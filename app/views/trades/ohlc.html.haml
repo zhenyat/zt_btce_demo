@@ -1,0 +1,37 @@
+%h4=link_to "Home", root_path
+%hr
+
+%h1 OHLC
+/%p= "#{@timeframe}"
+.container
+  -#.row
+    .col-md-4
+      %h4 Timeframe:
+    .col-md-2
+      %h4= @timeframe.first
+    .col-md-2
+      %h4= @timeframe.last
+  %br
+    %table.table.table-striped.table-hover
+      %thead
+        %tr
+          %th= 'Open'
+          %th= 'Close'
+          %th= 'High'
+          %th= 'Low'
+          %th= 'Amount'
+
+      %tbody
+        %tr
+          %td= "#{@open.price}"
+          %td= "#{@close.price}"
+          %td= "#{@high.price}"
+          %td= "#{@low.price}"
+          %td= "#{@amount}"
+        %tr
+          %td= "#{Time.at(@open.timestamp)}"
+          %td= "#{Time.at(@close.timestamp)}"
+          %td= "#{Time.at(@high.timestamp)}"
+          %td= "#{Time.at(@high.timestamp)}"
+          %td= ""
+    

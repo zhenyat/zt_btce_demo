@@ -11,5 +11,8 @@ module ZtBtceDemo
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
+    # 
+    # ZT updates
+    config.time_zone = "Moscow"   # Default: UTC
   end
 end

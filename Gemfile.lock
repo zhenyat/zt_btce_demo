@@ -126,6 +126,8 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashie (3.5.6)
+    highstock-rails (5.0.11)
+      railties (>= 3.1)
     html2haml (2.2.0)
       erubis (~> 2.7.0)
       haml (>= 4.0, < 6)
@@ -304,6 +306,7 @@ DEPENDENCIES
   guard
   guard-minitest
   haml-rails
+  highstock-rails
   jbuilder
   jquery-rails
   lightbox2-rails
