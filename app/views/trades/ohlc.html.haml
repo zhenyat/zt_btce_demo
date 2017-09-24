@@ -3,34 +3,24 @@
 
 %h1 OHLC Chart
 .container
-  .row
-    .col-md-2
-      %h4 Timeframe:
-    .col-md-1
-      %h4= Time.at(@timeframe).strftime("%H:%M")
-    .col-md-1
-      %h4= Time.at(@timeframe + 1800).strftime("%H:%M")
-  %br
   %table.table.table-striped.table-hover
     %thead
       %tr
+        %th= 'Time Frame (local time)'
         %th= 'Open'
         %th= 'Close'
         %th= 'High'
         %th= 'Low'
         %th= 'Amount'
+        %th= 'Trades total'
 
     %tbody
-      %tr
-        %td= "#{@open.price}"
-        %td= "#{@close.price}"
-        %td= "#{@high.price}"
-        %td= "#{@low.price}"
-        %td= "#{@amount}"
-      %tr
-        %td= "#{Time.at(@open.timestamp)}"
-        %td= "#{Time.at(@close.timestamp)}"
-        %td= "#{Time.at(@high.timestamp)}"
-        %td= "#{Time.at(@high.timestamp)}"
-        %td= ""
-
+      - @candles.each do |candle|
+        %tr
+          %td= "#{date_from_timestamp candle.first}"
+          %td= "#{candle.last[0]}"
+          %td= "#{candle.last[1]}"
+          %td= "#{candle.last[2]}"
+          %td= "#{candle.last[3]}"
+          %td= "#{candle.last[4]}"
+          %td= "#{candle.last[5]}"

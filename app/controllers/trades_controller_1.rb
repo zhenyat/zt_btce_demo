@@ -54,48 +54,37 @@ class TradesController < ApplicationController
   end
   
   def ohlc
+  
     #! WEX Candlestick Chart displays the local time
+    timeframe = []
+#    timeframe[0] = DateTime.parse("2017-09-24 11:00:00").to_i
+#    timeframe[1] = DateTime.parse("2017-09-24 11:30:00").to_i
 
-    add_trades
+    timeframe[0] = time_round.to_i
+    timeframe[1] = timeframe[0] +1800
+    @timeframe = timeframe[0]
+
+    trades = Trade.where('pair_id = ? and timestamp >= ? and timestamp < ?', 1, timeframe[0], timeframe[1]).order(:timestamp)
+
+    @open   = trades.first
+    @close  = trades.last
+    @high   = trades.max_by(&:price)
+    @low    = trades.min_by(&:price)
+    @amount = trades.sum(:amount)
     
-    trades = Trade.where('pair_id = ?', 1).order(:timestamp)
+#    @open  = trades.first.price
+#    @close = trades.first.last
+#    @high  = trades.maximum(:price)
+#    @low   = trades.minimum(:price)
     
-    @candles   = {}         # Hash of the result
-    time_slot  = 30.minute
-    time_frame = []
-
-   #time_frame[0] = (set_time_frame trades.first.timestamp, time_slot)   # All data 
-    time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)        # Data for last 24 hours
-    time_frame[1] = (time_frame[0] + time_slot)
-    
-    while time_frame.first <= trades.last.timestamp 
-      
-      candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last)
-
-      if candle_trades.present?
-        data = []
-        data << candle_trades.first.price
-        data << candle_trades.last.price
-        data << candle_trades.maximum(:price)
-        data << candle_trades.minimum(:price)
-        data << candle_trades.sum(:amount)
-        data << candle_trades.count
-        data << time_slot
-
-        @candles[time_frame.first] = data
-      end
-      
-      time_frame[0] += time_slot
-      time_frame[1]  += time_slot
-    end    
   end
   
   def time_round(slot = 3.hour)
     Time.at((Time.now.to_i / slot).round * slot)
   end
   
-  # Sets the nearest timeframe 
-  def set_time_frame time, time_slot = 30.minutes
-    Time.at(((time.to_i / time_slot).round *  time_slot) + time_slot).to_i
+  # Gets the timeframe next to the time 
+  def timeframe_next time, slot = 30.minutes
+    Time.at (((time.to_i / slot).round *  slot) + slot)
   end
 end
