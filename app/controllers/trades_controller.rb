@@ -54,14 +54,18 @@ class TradesController < ApplicationController
   end
   
   def ohlc
-    puts time_round
-    
+  
+    #! WEX Candlestick Chart displays the local time
     timeframe = []
-    timeframe[0] = DateTime.parse("2017-09-24 11:00:00").to_i
-    timeframe[1] = DateTime.parse("2017-09-24 11:30:00").to_i
-    
+#    timeframe[0] = DateTime.parse("2017-09-24 11:00:00").to_i
+#    timeframe[1] = DateTime.parse("2017-09-24 11:30:00").to_i
+
+    timeframe[0] = time_round.to_i
+    timeframe[1] = timeframe[0] +1800
+    @timeframe = timeframe[0]
+
     trades = Trade.where('pair_id = ? and timestamp >= ? and timestamp < ?', 1, timeframe[0], timeframe[1]).order(:timestamp)
-    
+
     @open   = trades.first
     @close  = trades.last
     @high   = trades.max_by(&:price)
@@ -75,7 +79,7 @@ class TradesController < ApplicationController
     
   end
   
-  def time_round(slot = 30.minute)
+  def time_round(slot = 3.hour)
     Time.at((Time.now.to_i / slot).round * slot)
   end
   

@@ -13,6 +13,6 @@ module ZtBtceDemo
     # -- all .rb files in that directory are automatically loaded.
     # 
     # ZT updates
-    config.time_zone = "Moscow"   # Default: UTC
+#    config.time_zone = "Moscow"   # Default: UTC
   end
 end
