@@ -56,9 +56,17 @@ class TradesController < ApplicationController
   def ohlc
     #! WEX Candlestick Chart displays the local time
 
-    add_trades
+#    add_trades
+
+    @counts  = []
+    @amounts = []
+    @amounts_bar = []
     
-    trades = Trade.where('pair_id = ?', 1).order(:timestamp)
+    
+    pair    = 'btc_usd'
+    @pair_id = Pair.find_by(name: pair).id
+    
+    trades = Trade.where('pair_id = ?', @pair_id).order(:timestamp)
     
     @candles   = {}         # Hash of the result
     time_slot  = 30.minute
@@ -68,6 +76,7 @@ class TradesController < ApplicationController
     time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)        # Data for last 24 hours
     time_frame[1] = (time_frame[0] + time_slot)
     
+    i = 0
     while time_frame.first <= trades.last.timestamp 
       
       candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last)
@@ -83,6 +92,13 @@ class TradesController < ApplicationController
         data << time_slot
 
         @candles[time_frame.first] = data
+
+#        @counts << [Time.at(time_frame.first).strftime('%d-%m-%Y %H:%M:%S'), candle_trades.sum(:amount)]
+#         @counts << [time_frame.first+3.hour, candle_trades.sum(:amount)]
+         @counts  << [time_frame.first+3.hour, candle_trades.count]
+         @amounts << [time_frame.first, candle_trades.sum(:amount)]
+         @amounts_bar << [Time.at(time_frame.first).strftime('%d %H:%M'), candle_trades.sum(:amount)]
+        
       end
       
       time_frame[0] += time_slot

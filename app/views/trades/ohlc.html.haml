@@ -2,6 +2,7 @@
 %hr
 
 %h1 OHLC Chart
+%h3= "Pair: #{Pair.find(@pair_id).name}"
 .container
   %table.table.table-striped.table-hover
     %thead
@@ -24,3 +25,12 @@
           %td= "#{candle.last[3]}"
           %td= "#{candle.last[4]}"
           %td= "#{candle.last[5]}"
+
+%h3 Number of Trades
+= line_chart @counts, label: "Trades", xtitle: "Time (last 24 h)", ytitle: "Trades per Candle", colors: ["red", "green"]
+
+%h3 Amount - Bars
+= column_chart @amounts_bar, label: "Trades"
+
+%h3 Amount- Line
+= line_chart @amounts, label: "Trades"
