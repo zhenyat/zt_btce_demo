@@ -15,7 +15,7 @@
         %th= 'Trades total'
 
     %tbody
-      - @candles.each do |candle|
+      - @candles.to_a.reverse.to_h.each do |candle|
         %tr
           %td= "#{date_from_timestamp candle.first}"
           %td= "#{candle.last[0]}"
