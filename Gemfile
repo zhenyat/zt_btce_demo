@@ -34,7 +34,8 @@
 #   19.07.2017  RoR 5.0.4
 #   31.08.2017  RoR 5.1.3
 #   18.09.2017  Ruby 2.4.2
-#   20.09.2017  Chartkick
+#   20.09.2017  Chartkick - Google Candlesticks are NOT SUPPORTED!
+#   28.09.2017  gon
 ################################################################################
 source 'https://rubygems.org'
 ruby '2.4.2'
@@ -100,11 +101,12 @@ gem 'lightbox2-rails'                           # https://github.com/gavinkflam/
 gem 'simple_form'                               # https://github.com/plataformatec/simple_form
 gem 'enum_help'
 
+gem 'gon'
 gem 'chartkick'
 #gem 'highcharts-rails'
-gem 'highstock-rails'                           # https://github.com/justinkuepper/highstock-rails
-gem 'groupdate'
-gem 'active_median'
+#gem 'highstock-rails'                           # https://github.com/justinkuepper/highstock-rails
+#gem 'groupdate'
+#gem 'active_median'
 
 group :development, :test do
   gem 'byebug'                      # Byebug is a Ruby 2 debugger. Call 'byebug' anywhere in the code to stop execution and get a debugger console

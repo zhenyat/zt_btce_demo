@@ -34,20 +34,42 @@ class TradesController < ApplicationController
     puts "===== Trades added: #{add_count} | Trades skipped: #{skip_count} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
   end
   
-  def charts
-    @asks = []
+  def candlesticks
+    pair    = 'btc_usd'
+    pair_id = Pair.find_by(name: pair).id
     
-    asks = Trade.where('kind == ? and pair_id = ?', 0, 1).order(:timestamp)#.first(100)
-    asks.each do |ask|
-#    Datum.create value: ask.price, closed_at: Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S')
-     tmp = [Time.at(ask.timestamp).strftime('%d-%m-%Y %H:%M:%S'), ask.price]
-     tmp = [Time.at(ask.timestamp).strftime('%d-%m %H:%M'), ask.price]
-     @asks << tmp
+    trades = Trade.where('pair_id = ?', pair_id).order(:timestamp)
+    
+    candles    = []         # Array of the result
+    time_slot  = 30.minute
+    time_frame = []
+
+#   time_frame[0] = (set_time_frame trades.first.timestamp, time_slot)   # All data 
+    time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)       # Data for last 24 hours
+    time_frame[1] = (time_frame[0] + time_slot)
+ 
+     while time_frame.first <= Time.now.to_i
+      
+      candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last).order(:timestamp)
+
+      if candle_trades.present?
+        data = []
+        data << Time.at(time_frame.first).strftime('%d-%M-%Y %H:%M')
+        data << candle_trades.minimum(:price).to_f                 # BigDecimal to Float - MUST BE DONE!
+        data << candle_trades.first.price.to_f
+        data << candle_trades.last.price.to_f
+        data << candle_trades.maximum(:price).to_f
+        candles << data
+      end
+
+      time_frame[0] += time_slot
+      time_frame[1] += time_slot
     end
-#    @asks = Datum.first(20)
-    puts @asks.count.to_s
+    
+    gon.pair    = pair
+    gon.candles = candles
   end
-  
+      
   def index
     add_trades
     @trades = Trade.all.order(tid: :desc)  
@@ -62,7 +84,6 @@ class TradesController < ApplicationController
     @amounts = []
     @amounts_bar = []
     
-    
     pair    = 'btc_usd'
     @pair_id = Pair.find_by(name: pair).id
     
@@ -76,17 +97,16 @@ class TradesController < ApplicationController
     time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)        # Data for last 24 hours
     time_frame[1] = (time_frame[0] + time_slot)
     
-    i = 0
-    while time_frame.first <= trades.last.timestamp 
+    while time_frame.first <= Time.now.to_i
       
-      candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last)
+      candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last).order(:timestamp)
 
       if candle_trades.present?
         data = []
+        data << candle_trades.minimum(:price)
         data << candle_trades.first.price
         data << candle_trades.last.price
         data << candle_trades.maximum(:price)
-        data << candle_trades.minimum(:price)
         data << candle_trades.sum(:amount)
         data << candle_trades.count
         data << time_slot
