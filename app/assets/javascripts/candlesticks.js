@@ -15,6 +15,8 @@ function drawChart() {
     legend:      'none',
     width:       1200,
     height:      900,
+    seriesType: "candlesticks",
+    series: { 1: {type: "line"} },
     bar:         { groupWidth: '61.8%' }, // 61.8% - golden ratio (default); 100% - removes space between bars.
     candlestick: {
       fallingColor: { strokeWidth: 0, fill: '#a52714' },  // red
@@ -22,9 +24,10 @@ function drawChart() {
     }
   };
 
-  var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+//  var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
   
   // Instantiate and draw our chart, passing in some options.
-  var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
+  var chart = new google.visualization.ComboChart(document.getElementById('chart_div'));
+//  var chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
   chart.draw(data, options);
 };

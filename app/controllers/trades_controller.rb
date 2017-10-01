@@ -41,14 +41,15 @@ class TradesController < ApplicationController
     trades = Trade.where('pair_id = ?', pair_id).order(:timestamp)
     
     candles    = []         # Array of the result
-    time_slot  = 30.minute
+    time_slot  = 2.minute
     time_frame = []
 
 #   time_frame[0] = (set_time_frame trades.first.timestamp, time_slot)   # All data 
     time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)       # Data for last 24 hours
     time_frame[1] = (time_frame[0] + time_slot)
  
-     while time_frame.first <= Time.now.to_i
+    t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    while time_frame.first <= Time.now.to_i
       
       candle_trades = trades.where('timestamp >= ? and timestamp < ?', time_frame.first, time_frame.last).order(:timestamp)
 
@@ -59,13 +60,15 @@ class TradesController < ApplicationController
         data << candle_trades.first.price.to_f
         data << candle_trades.last.price.to_f
         data << candle_trades.maximum(:price).to_f
+        data << (candle_trades.maximum(:price) + candle_trades.minimum(:price) + candle_trades.last.price).to_f / 3
         candles << data
       end
 
       time_frame[0] += time_slot
       time_frame[1] += time_slot
     end
-    
+    t_finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    puts "Time: #{(t_finish - t_start)}"
     gon.pair    = pair
     gon.candles = candles
   end
