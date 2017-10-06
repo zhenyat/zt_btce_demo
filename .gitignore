@@ -21,4 +21,9 @@
 .byebug_history
 
 /config/btce_api.yml
-/nbproject/private/
+
+/nbproject
+
+# Ignore Mac OS X sys files
+*.DS_Store
+*/.DS_Store

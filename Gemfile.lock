@@ -1,7 +1,9 @@
-PATH
-  remote: /Users/Zhenya/ZT_Lab/Ruby/Gems/zt_btce
+GIT
+  remote: https://github.com/zhenyat/zt_btce.git.git
+  revision: e93f8fe1060b7bafb67960da11751da7c6d0e686
+  branch: master
   specs:
-    zt_btce (0.5.3)
+    zt_btce (0.5.4)
 
 GEM
   remote: https://rubygems.org/
@@ -62,7 +64,7 @@ GEM
       will_paginate
     builder (3.2.3)
     byebug (9.1.0)
-    carrierwave (1.1.0)
+    carrierwave (1.2.0)
       activemodel (>= 4.0.0)
       activesupport (>= 4.0.0)
       mime-types (>= 1.16)

@@ -2,6 +2,7 @@ class TradesController < ApplicationController
   
   # Adds news data from the stock to DB
   def add_trades
+    t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
     add_count  = 0
     skip_count = 0  
     max_tid    = Trade.all.maximum(:tid)
@@ -31,21 +32,25 @@ class TradesController < ApplicationController
         end
       end
     end
-    puts "===== Trades added: #{add_count} | Trades skipped: #{skip_count} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
+    t_finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    puts "===== Trades added: #{add_count} | Trades skipped: #{skip_count} at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}. Time elapsed: #{(t_finish - t_start).round(2)} sec."
   end
   
   def candlesticks
     pair    = 'btc_usd'
     pair_id = Pair.find_by(name: pair).id
     
-    trades = Trade.where('pair_id = ?', pair_id).order(:timestamp)
+    period = 2.day        # Data for last 24 hours period
+    
+    trades = Trade.where('pair_id = ?', pair_id).order(:timestamp)      # All data
+#    trades = Trade.where('pair_id = ? AND timestamp >= ?', pair_id, (Time.now - period).to_i).order(:timestamp)
     
     candles    = []         # Array of the result
-    time_slot  = 2.minute
+    time_slot  = 15.minute
     time_frame = []
 
 #   time_frame[0] = (set_time_frame trades.first.timestamp, time_slot)   # All data 
-    time_frame[0] = (set_time_frame (Time.now - 1.day), time_slot)       # Data for last 24 hours
+    time_frame[0] = (set_time_frame (Time.now - period), time_slot)
     time_frame[1] = (time_frame[0] + time_slot)
  
     t_start = Process.clock_gettime(Process::CLOCK_MONOTONIC)
@@ -55,12 +60,17 @@ class TradesController < ApplicationController
 
       if candle_trades.present?
         data = []
+        price_min   = candle_trades.minimum(:price).to_f                 # BigDecimal to Float - MUST BE DONE!
+        price_max   = candle_trades.maximum(:price).to_f
+        price_first = candle_trades.first.price.to_f
+        price_last  = candle_trades.last.price.to_f
+        
         data << Time.at(time_frame.first).strftime('%d-%M-%Y %H:%M')
-        data << candle_trades.minimum(:price).to_f                 # BigDecimal to Float - MUST BE DONE!
-        data << candle_trades.first.price.to_f
-        data << candle_trades.last.price.to_f
-        data << candle_trades.maximum(:price).to_f
-        data << (candle_trades.maximum(:price) + candle_trades.minimum(:price) + candle_trades.last.price).to_f / 3
+        data << price_min
+        data << price_first
+        data << price_last
+        data << price_max
+        data << (price_max + price_min + price_last) / 3
         candles << data
       end
 
@@ -68,7 +78,7 @@ class TradesController < ApplicationController
       time_frame[1] += time_slot
     end
     t_finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    puts "Time: #{(t_finish - t_start)}"
+    puts "Time elapsed: #{(t_finish - t_start).round(2)} sec"
     gon.pair    = pair
     gon.candles = candles
   end
