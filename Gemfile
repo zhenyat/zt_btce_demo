@@ -47,7 +47,7 @@ end
 
 gem 'rails', '~> 5.1.4'                         # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 
-gem 'zt_btce', :github => 'zhenyat/zt_btce.git', :branch => 'secrets'
+gem 'zt_btce', :github => 'zhenyat/zt_btce.git', :branch => 'master'
 #gem 'zt_btce', path: '~/ZT_Lab/Ruby/Gems/zt_btce'
 
 #gem 'hashie', '~>  3.5.6'                       # https://github.com/intridea/hashie
