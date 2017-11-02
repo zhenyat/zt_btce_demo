@@ -46,7 +46,7 @@ class TradesController < ApplicationController
 #    trades = Trade.where('pair_id = ? AND timestamp >= ?', pair_id, (Time.now - period).to_i).order(:timestamp)
     
     candles    = []         # Array of the result
-    time_slot  = 15.minute
+    time_slot  = 30.minute
     time_frame = []
 
 #   time_frame[0] = (set_time_frame trades.first.timestamp, time_slot)   # All data 
@@ -78,7 +78,7 @@ class TradesController < ApplicationController
       time_frame[1] += time_slot
     end
     t_finish = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-    puts "Time elapsed: #{(t_finish - t_start).round(2)} sec"
+    puts "===== Time elapsed: #{(t_finish - t_start).round(2)} sec"
     gon.pair    = pair
     gon.candles = candles
   end
@@ -143,8 +143,47 @@ class TradesController < ApplicationController
     Time.at((Time.now.to_i / slot).round * slot)
   end
   
+ 
   # Sets the nearest timeframe 
   def set_time_frame time, time_slot = 30.minutes
     Time.at(((time.to_i / time_slot).round *  time_slot) + time_slot).to_i
   end
+
+  def update_candles_array pair_id=1, period=1.day
+    
+    filename = Rails.root.join "db/data_#{pair_id}"
+    if filename.exist?
+      file = File.open filename, 'a+'
+    else
+      file   = File.open filename, 'w'
+      trades = Trade.where('pair_id = ? AND timestamp >= ?', pair_id, (Time.now - period).to_i).order(:timestamp)
+      trades.each do |t|
+        a = []
+        a << t.id << t.kind << t.price << t.amount << t.tid << t.timestamp
+        file.write a.to_json
+      end
+#      a << t.id << t.kind << t.price << t.amount << t.tid << t.timestamp
+    end
+  end
+  
 end
+
+=begin
+file   = File.open filename, 'w'
+tr = trades.where('timestamp >= ?', (Time.now - 1.day).to_i)
+tr.each do |t|
+  a = []
+  a << t.id << t.kind << t.price << t.amount << t.tid << t.timestamp
+  file.puts a.to_json
+end
+file.close
+
+file   = File.open filename, 'r'
+b=[]
+lines = file.readlines
+file.close
+lines.each do |line|
+  arr = JSON.parse(line)
+  b << arr  if arr.last >= (Time.now - 1.day).to_i
+end
+=end
