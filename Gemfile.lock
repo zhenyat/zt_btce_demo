@@ -3,7 +3,7 @@ GIT
   revision: e93f8fe1060b7bafb67960da11751da7c6d0e686
   branch: master
   specs:
-    zt_btce (0.5.4)
+    zt_btce (0.6.0)
 
 GEM
   remote: https://rubygems.org/

@@ -27,3 +27,5 @@
 # Ignore Mac OS X sys files
 *.DS_Store
 */.DS_Store
+# Ignore encrypted secrets key file.
+config/secrets.yml.key
