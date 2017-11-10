@@ -112,14 +112,14 @@ class PagesController < ApplicationController
 #    t = ZtBtce::CliTest.new
 #    t.say_hello
     
-    @domain = ZtBtce::DOMAIN
-    @key    = ZtBtce::KEY
+    @domain = ZtBtce.get_domain
+    @key    = ZtBtce.get_key
     
     asterisks =''
     for i in (0..59)
       asterisks[i]= '*'
     end
-    @secret = "#{asterisks}#{ZtBtce::SECRET[-4..-1]}"
+    @secret = "#{asterisks}#{ZtBtce.get_secret[-4..-1]}"
   end
 
   def pairs
