@@ -85,6 +85,8 @@ class TradesController < ApplicationController
       
   def index
     add_trades
+    puts "***** ZT! Sleep 5 sec"
+    sleep 5
     @trades = Trade.all.order(tid: :desc)  
   end
   
