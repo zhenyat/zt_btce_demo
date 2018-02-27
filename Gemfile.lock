@@ -1,9 +1,9 @@
 GIT
   remote: https://github.com/zhenyat/zt_btce.git.git
-  revision: d8cbb865b25c5c1b73e58e70a3e81af3bfa646fd
+  revision: a7391888071d5751b51942ced060633b9617118e
   branch: master
   specs:
-    zt_btce (0.7.0)
+    zt_btce (0.9.0)
 
 GEM
   remote: https://rubygems.org/
